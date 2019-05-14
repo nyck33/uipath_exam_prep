@@ -1,0 +1,28 @@
+{
+  "name": "Lesson5-Practice1",
+  "description": "Blank Process",
+  "main": "Main.xaml",
+  "dependencies": {
+    "UiPath.Excel.Activities": "[2.4.6856.17931]",
+    "UiPath.Mail.Activities": "[1.1.6562.21018]",
+    "UiPath.System.Activities": "[18.3.6858.31352]",
+    "UiPath.UIAutomation.Activities": "[18.3.6877.28298]"
+  },
+  "schemaVersion": "3.2",
+  "studioVersion": "18.3.1.44",
+  "projectVersion": "1.0.0.0",
+  "runtimeOptions": {
+    "autoDispose": false,
+    "isPausable": true,
+    "excludedLoggedData": [
+      "Private:*",
+      "*password*"
+    ]
+  },
+  "projectType": "Workflow",
+  "libraryOptions": {
+    "includeOriginalXaml": false,
+    "privateWorkflows": []
+  },
+  "webServices": []
+}
