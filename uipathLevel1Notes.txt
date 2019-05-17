@@ -1,0 +1,273 @@
+recording use F2 for elements that automatically hide to pause for 3 seconds.
+
+Selectors:
+
+has structure:
+
+<node_1><node_2>...<node_N/> with 1 being parent and Nth being gui element of interest.
+
+each node has one or more  attributes that help you correctly identify a specifi level of selected application.  
+
+each node as this format:
+
+<ui_system attr_name_1='attr_value_1'...Nth>
+
+pick attributes with constant value.  If value of attribute changes each time app started, selector cannot ID element.  
+
+Selectors stored in Properties panel of activities, under Input>Target>Selector.  All activities related to graphical elements have this property.  
+
+Optimize selector selection by:
+
+add or remove attributes
+
+add parent or children tags
+
+use wildcards to replace changing values
+
+Take out css so selectors are not format-dependent.  Add parents.  
+Adding parents is also good but adding too many parents again makes it too format/structure dependent.  
+
+Anchor Base:
+
+Find Element:  output is a UI Element Object that can be used later as a reference in the Element property of the Target.  
+
+Use label as anchor because they are usually stable.  
+
+Anchor Base uses element positions on screen vs. relative  selector relies on internal structure of application.  
+
+selector is a path to required UI element, starting from root container and going to target.
+
+Selector contains 2 types of info: element type and one or more attributes
+
+UiPath builds selectors with first and last container with intermediate as needed
+
+If robots finds multiple possible matches for selector, uses the topmost one usually.
+
+Basic recording creates full selectors and Desktop recording generates only partial ones.  
+
+Build dynamic selectors using wildcards:  questions marks replace single characters and * replaces any num chars or use variables.  
+
+Use Attach to live element to update existing selector to also match 2nd element.  Gone so use UI Explorer to get attributes and selector values.  
+
+Use selector's idx property to get a certain occurrence of element found multiple times (but usually dont' want idx so use UI explorer, add parents or take away IDs as needed and copy over selector to whatever activity is using it.  
+
+Avoid using idx attribute if value > 2 unless you don't have other options.  Always try to add other attributes to make sure selector is stable.  
+
+If interference from other apps and windows is almost guaranteed, use partial selectors.  Partial selectors enclosed in container such as Attach Browser or Attach Window.  Full selectors used when switching between multiple windows. 
+
+nav tag has previous and next
+
+robot searches for UiElement up to value in milliseconds of activity's TimeoutMS property.
+
+When selector is stable use Anchor Base and Relative Selectors.  
+
+FindElement activity returns found element in a variable for later use and throws exception if it doesn't find element on screen.
+
+Native Citrix Recording:
+
+Use Text, Image for most and Element when having to choose from drop down or radio button.  
+
+Scrape relative scrapes only a portion of image, relative to an anchor.  
+
+Click Image Accuracy between 0 and 1 with higher values meaning higher similarity between images.  
+
+Getting info out done in two ways:
+
+Copy Selected Text (Select and copy from recorder) and scrape relative.  For copy selected text you need clipboard sharing between local and citrix envs.
+
+Click image is fast and reliable but sensitive to graphical variations while click OCR text immune to such changes but susceptible to OCR failures.  
+
+Use keyboard shortcuts as much as possible to avoid problems that come with  click OCR text and click image.  
+
+Selecting too much or too little of image might lead to it not being found or a false positive.
+
+For good results when matching images, resolution should be at least equal to one used when recording workflows.  Compensate such losses by lowering Accuracy factor.
+
+Pay attention to how application layout changes on different resolutions whne using coordinate based techniques.  
+
+Use find image on Favicon to ensure web page is loaded before starting actions.
+
+Use keyboard inputs in field, ie. tab when you can tab over to next field and to the login button.  
+
+In Citrix virutal envs, create shortcut keys to start app, send hotkey and enter combo and select entire virtual window.  This is fast and reliable.  
+
+Windows +R for Cmd prompt run with virtual window maximized.  
+
+To open app with args, use Type Into activity and type in var app (full path of app) + " " + args + enter
+
+To design workflow that finds 3 to 4 possible images at same time is by using a Pick block with various PickBranch activities:
+
+For triggrer, use Image Exists and outline image.  For activity, use Click Image activity and change click property to double click.  
+
+Pay attention to state changes of icons such as when icon is selected.  
+
+Can also open Start menu and typing cmd to use command prompt to run app.  
+
+Excel:
+
+Excel Application Scope per excel file so open file needs one and save to a new file needs its own A. Scope.  
+
+use Excel app or Direct access, first requires Excel and multiple processes.  
+
+Inner join, Outer join, Full join (refer to Word file)
+
+Excel application scope vs. Workbook activities
+
+Workbook activities don't require Excel to be installed and can work completely in background.
+
+Visible property determines if operations performed in background or front
+
+If using Direct Access method, operations done internally
+
+Read range activity reads a part of Excel file and stores in datatable
+
+workbook references excel file but datatable is just a table with rows and cols
+
+Write vs. Append, write overwrites previous entries
+
+Read and Write range both have Add Headers property
+
+There are CSV activities very similar to Excel ones
+
+Build Data Table activity creates datatable with cols with data types that span all range of Visual Basic .NET
+
+Sort and Filter Table activities require a table to be defined in Excel
+
+Select range is a useful tool
+
+There is a For Each correspondent when working with DataTables - For Each Row
+
+Instead of using index, if headers exist, can use column names with Get Row Item activity
+
+PDF
+
+2 categories:  one for processing large chunks of text or whole docs and one for when focusing on specific text elements
+
+Choose either Read PDF text or Read PDF with OCR depending on  PDF file.  Both can run in background.
+
+Another method of grabbing blocks of text is Screen Scraping tool.
+
+Also use Anchor Base to extract certain values.
+
+ReadPDFText is more accurate than OCR methods.
+
+Anchor base can be more reliable because it can handle structural changes.  
+
+Email:  may activies depending on protocol, ie. smtop, pop3, imap, exchange, outlook
+
+get email function:
+
+fetching email from certain mailbox folder(outlook, imap and exchange)
+
+mailmessage object doesn't directly provide timestamp information so need to access "Date" value from Headers dictionary
+
+outlook activity has feature to filter incoming messages on criteria like subject or received time
+
+when loading template fo email from a file can use string formatting to populate placeholders with dynamic data
+
+outlook and exchange actitivites are easier to use since they don't require connection parameters
+
+if outlook is configured usually best choice since it requires least amount of setting up plus extra features and being compatible 
+with any email protocol.
+
+Debugging and Try Catch blocks
+
+30 seconds is timeout value default but can use Element Exists, Find Element or Wait Element Vanish and their image counterparts.
+
+Element exists does not affect workflow, just returns boolean value but other two will stop execution until element is found or disappears.
+
+Try Catch:  Try contains actions that might throw error, actions to take when error occurs inside Catch block and actions to 
+always perform after the other 2 blocks inside the Finally block.
+
+Even though I catch exception, might want to make sure workflow actually stops by using Rethrow activity.
+
+Separate individual components of automation into different workflow files and call them using Invoke Workflow.  
+
+Very important to use relevant names for actions and flowcharts.
+
+Avoid problems generated by windows that might be on top of one I use by keeping away from default input method.  
+
+When having problems with selectors use Indicate on Screen and Repair options to "refresh" it.  
+
+Best Practices
+
+avoid nested If statements, use flowcharts instead
+break whole process in smaller workflows
+Use exception handling for problematic workflows by putting them in Try Catch blocks (prevents crashing for minor errors)
+
+T/C contains externally invoked workflows which helps in debugging and in process of recovery
+
+Automatic recovery sequences placed inside catch blocks can make automation reliable.  ?????
+So organize in way that resets application or process into usable state in event of an exception.
+
+Make workflows readable:
+
+1.  Give descriptive names to all components (workflows, activities, variables)
+2.  leave explanatory notes and comments
+3.  log real time execution process to pinpoint errors faster and keep track of what is happening
+4.  keep env settings in a config file (JSON, csv, text file) to change parameters of robot without starting UiPath
+5.  Close applications, windows, web pages to avoid cluttering and slowdown to eventual crash
+
+Invoke a workflow:
+
+right-click on sequence or activity and save as workflow which replaces it with a call to external workflow.
+can also drag and drop.  
+Timeout property until error.  
+
+Data passing to invoked workflows:  are passed as arguments to invoked workflow (like a function).
+Data can be passed in both directions, ie. args and return stmts
+Keep log when run attended.
+
+4 key principles:
+reliability, efficiency, maintainability, extensibility
+
+Extract as workflow, replace with Invoke workflow and turn into a programming function
+
+Appropriate layouts for each workflow:
+
+Main:  flowchart or state machine
+Business logic:  flowchart
+UI interactions: sequence
+Avoid nested IFs by using flowcharts
+
+Good to break up process into smaller workflows:  
+develop and test pieces independently
+reuse workflow
+collaborate more efficiently by working on separate files
+
+Always handle exceptions:
+Place exception prone workflows in Try Catch blocks.  Also externally invoked workflows, setup recover sequences, ie. restarting an app
+
+Make workflows readable.  
+naming is important, notes and comments, log real time execution progress, place env settings in config file
+Close apps when no longer needed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
